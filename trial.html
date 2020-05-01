@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial</title>
+</head>
+<body>
+    <div></div>
+    <script>
+        //way 1 to create empty matrices n fill with 0
+        var matrix = [];
+        for (i=0; i<3; i++){
+            matrix[i] = new Array(3).fill(0);
+        }
+        console.log("This is the zero matrix :",matrix);
+        document.write("This is the zero matrix :",matrix);
+        console.table(matrix)
+
+        //way2 to create empty matrices and fill with 0
+        var matrix2 = Array.from({length:2},() => Array(3).fill(0));
+
+        console.log("This is matrix 2:", matrix2)
+
+        let board = [];
+
+        //way 3 to create empty matrix
+        for(r=0; r<3; r++){
+            board[r] = []
+            for(c=0; c < 4; c++){
+                board[r][c] = 0;
+            }
+        }
+        console.log("this is the board :",board)
+        console.table(board)
+        console.log(board.length)
+    </script>
+    
+</body>
+</html>
