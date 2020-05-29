@@ -1,12 +1,16 @@
-import Board from './Board.js';
 
 //Pieces with their functionality
-class Piece extends Board{
+class Piece{
     //
-    constructor(shape,color){
-        super(); 
+    x;
+    y;
+    ctx;
+    constructor(shape,color,ctx){
         this.shape = shape;
         this.color = color;
+        this.ctx = ctx;
+
+        this.board = new Board();
 
         this.shapeConfigNum=0;//can have values 0,1,2,3
         this.activeShape=this.shape[this.shapeConfigNum];
@@ -17,13 +21,13 @@ class Piece extends Board{
     }
 
     createPiece(){
-        for(r = 0;r < this.activeShape.length;r++){
-            for(c = 0; c < this.activeShape.length;c++){
+        for(let r = 0;r < this.activeShape.length;r++){
+            for(let c = 0; c < this.activeShape.length;c++){
                 this.board[this.x + c][this.y + r]=this.activeShape[r][c];
 
                 //draw one square of the piece on canvas
                 if( this.activeShape[r][c]){
-                    drawSquare(this.x + c, this.y + r, this.color);
+                    this.board.drawSquare(this.x + c, this.y + r, this.color);
                 }
             }
         }
@@ -31,14 +35,14 @@ class Piece extends Board{
 
     
     uncreatePiece(){
-        for(r = 0;r < this.activeShape.length;r++){
-            for(c = 0; c < this.activeShape.length;c++){
+        for(let r = 0;r < this.activeShape.length;r++){
+            for(let c = 0; c < this.activeShape.length;c++){
                 this.board[this.x + c][this.y + r]=0;
             }
 
             //whiten one square of the piece on canvas
             if( this.activeShape[r][c]){
-                drawSquare(this.x + c, this.y + r, VACANT["0"]);
+                this.board.drawSquare(this.x + c, this.y + r, VACANT["0"]);
             }
 
         }
@@ -48,7 +52,7 @@ class Piece extends Board{
 
     //Move piece
     movePieceLeft(){
-        if(this.checkCollision(-1,0,this.activeShape) == false){
+        if(this.board.checkCollision(-1,0,this.activeShape) == false){
             this.uncreatePiece();
             this.x--;
 
@@ -57,7 +61,7 @@ class Piece extends Board{
     }
 
     movePieceRight(){
-        if(this.checkCollision(1,0,this.activeShape) == false){
+        if(this.board.checkCollision(1,0,this.activeShape) == false){
             this.uncreatePiece();
             this.x++;
             this.createPiece();
@@ -65,11 +69,15 @@ class Piece extends Board{
     }
 
     movePieceDown(){
-        if(this.checkCollision(0,1,this.activeShape) == false){
+        if(this.board.checkCollision(0,1,this.activeShape) == false){
             this.uncreatePiece();
             this.y++;
             this.createPiece();
+        }else{
+            this.lockPiece();
+            return true;
         }
+        
     }
 
     //rotate piece
@@ -84,7 +92,7 @@ class Piece extends Board{
         let kick = 0;
 
         //refocusing the rotated piece
-        if(this.checkCollision(0,0,nextConfig) == true){
+        if(this.board.checkCollision(0,0,nextConfig) == true){
             if(this.x > COLS/2){
                 kick = -1; // right wall kick to left to bring it in board again
             }
@@ -94,7 +102,7 @@ class Piece extends Board{
         }
 
         //rotation
-        if(this.checkCollision(kick,0,nextConfig) == false){
+        if(this.board.checkCollision(kick,0,nextConfig) == false){
             this.uncreatePiece();
             this.x += kick;//change the x coord wrt to kicks
             //change config ie rotate
@@ -109,17 +117,17 @@ class Piece extends Board{
 
     //lock->we need to permanently color the piece
     lockPiece(){
-        for(r = 0; r < this.activeShape.length; r++){
-            for(c = 0; c < this.activeShape.length; c++){
+        for(let r = 0; r < this.activeShape.length; r++){
+            for(let c = 0; c < this.activeShape.length; c++){
                 //ignore vacant space
                 if(this.activeShape[r][c]){
                     continue;
                 }
 
                 //lock the game
-                if(this.checkCollision(0,1,this.activeShape)==true){
+                if(this.board.checkCollision(0,1,this.activeShape)==true){
                     this.board[this.x + c][this.y + r] = 1;
-                    this.colorBoard[this.x + c][this.y + r] = this.color;
+                    this.board.colorBoard[this.x + c][this.y + r] = this.color;
                     return true;
                 }
             }

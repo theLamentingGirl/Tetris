@@ -1,10 +1,20 @@
 
-export default class Board {
+class Board {
+    ctx;
+    canvas;
+
     constructor(){
         //to see changs in console
         this.board=this.createBoard();
         //to keep a track of colors
-        this.colorBoard = Array.from({length:COLS},() => Array(ROWS).fill(VACANT["0"]));
+        this.colorBoard = Array.from({length:ROWS},() => Array(COLS).fill(VACANT["0"]));
+            
+        this.ctx.canvas.width = COLS * BLOCK_SIZE;
+        this.ctx.canvas.height = ROWS * BLOCK_SIZE;
+    
+        //multiplies the board reference values - *BLOCK_SIZE
+        this.ctx.scale(BLOCK_SIZE,BLOCK_SIZE);
+    
         //initialising the piece position in the board
         this.x=3;
         this.y=-2;
@@ -13,27 +23,19 @@ export default class Board {
 
     //square used to make the pieces
     drawSquare(x,y,color){
-        ctx.fillStyle = color;
-        ctx.fillRect(x,y,1,1);//(xcoord,ycoord,sizex,sizey)
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x,y,1,1);//(xcoord,ycoord,sizex,sizey)
     }
     
 
     //draws the white board
     createBoard(){
-        let board = [];
-
-        //0/1 based array
-        for(r=0; r<ROWS; r++){
-            board[r] = []
-            for(c=0; c < COLS; c++){
-                board[r][c] = 0;
-                
-            }
-        }
-        
+        let board = Array.from({length:ROWS},() => Array(COLS).fill(0));
+        console.log(board)
         //draw on canvas
-        for(r = 0; r<ROWS; r++){
-            for(c = 0; c<COLS; c++){
+    
+        for(let r = 0; r < ROWS; r++){
+            for(let c = 0; c < COLS; c++){
                 this.drawSquare(c,r,VACANT["0"]) // VACANT_COLOR=white
             }
         }
@@ -45,8 +47,8 @@ export default class Board {
     //Collision function-sees if the next position made by user is valid
     //return True if collision; false if no collision
     checkCollision(x,y,piece){
-        for(r = 0; r < piece.length; r++){
-            for(c = 0; c < piece.length; c++){
+        for(let r = 0; r < piece.length; r++){
+            for(let c = 0; c < piece.length; c++){
                 //if the move is valid
                 if(!piece[r][c]){
                     continue;
@@ -58,7 +60,7 @@ export default class Board {
                 
                 //conditions for collision
                 //wall boundaries 
-                if(newX < 0 || newX >= COLS || newY >= ROW){
+                if(newX < 0 || newX >= COLS || newY >= ROWS){
                     return true;
                 }
                 //to account for new move outside board
@@ -66,7 +68,7 @@ export default class Board {
                     return true;
                 }
                 //if there is a piece there already
-                if(board[newX][newY] == 1){
+                if(this.board[newX][newY] == 1){
                     return true;
                 }
 
@@ -78,21 +80,21 @@ export default class Board {
 
     //remove full rows
     removeRows(){
-        let lines =0;
-        for(r =0; r < ROWS;r++){
+        let lines = 0;
+        for(let r = 0; r < ROWS; r++){
             //if every value is 1
-            if(this.board.r.every(value => value===1)){
+            if(this.board[r].every(value => value===1)){
                 lines++;
-                //remove row
+                //remove that row
                 this.board.splice(r,1);
-                //delete color
+                //delete color of that row
                 this.colorBoard.splice(r,1);
 
                 //add zero filled row at top
                 this.board.unshift(Array(COLS).fill(0));
                 this.colorBoard.unshift(Array(COLS).fill(VACANT["0"]));
                 
-                for(c = 0; c < COLS;c++){
+                for(let c = 0; c < COLS;c++){
                     //bring above row down
                     //color board is already spliced
                     //redrawing the whole board after splicing
@@ -105,18 +107,6 @@ export default class Board {
         }
         return lines;
         //lines will be useful to calc score + level
-    }
-
-    //game over
-    gameOver(piece){
-        for(r = 0; r < this.piece.length; r++){
-            for(c = 0; c < this.piece.length; c++){
-                if((this.y + r)<0){
-                    return true;
-                }
-            }
-        }
-        return false
     }
 
 }
