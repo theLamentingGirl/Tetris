@@ -1,16 +1,13 @@
 
-//Pieces with their functionality
+//Pieces of tetris with their functionality
 class Piece{
     //
-    x;
-    y;
-    ctx;
     constructor(shape,color,ctx){
         this.shape = shape;
         this.color = color;
         this.ctx = ctx;
 
-        this.board = new Board();
+        this.board = new Board(this.ctx,this.ctxNext);
 
         this.shapeConfigNum=0;//can have values 0,1,2,3
         this.activeShape=this.shape[this.shapeConfigNum];
@@ -69,6 +66,7 @@ class Piece{
     }
 
     movePieceDown(){
+        //returns true when the piece is locked
         if(this.board.checkCollision(0,1,this.activeShape) == false){
             this.uncreatePiece();
             this.y++;

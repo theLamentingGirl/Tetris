@@ -7,7 +7,7 @@
 </head>
 <body>
     <div></div>
-    <script>
+    <!-- <script>
         //way 1 to create empty matrices n fill with 0
         var matrix = [];
         for (i=0; i<3; i++){
@@ -34,7 +34,69 @@
         console.log("this is the board :",board)
         console.table(board)
         console.log(board.length)
-    </script>
+    </script> -->
+    <!-- <script>
+        const c = 100
+        class myClass{
+            c;
+            constructor(){
+                this.a = 1
+                this.b;
+            }
+
+            get(){
+                let a = 10
+                document.write("this is a =",this.a);
+                document.write("this is local a",a);
+                document.write("this is b", this.b);
+                document.write("this is c = ", this.c);
+            }
+        }
+
+        egClass = new myClass();
+        egClass.get();
+    </script> -->
+
+    <!-- <script>
+    const J = [
+        [
+            [1, 0, 0],//[0][0]
+            [1, 1, 1],//[0][1]
+            [0, 0, 0],//[0][2]
+        ],
+        [
+            [0, 1, 1],
+            [0, 1, 0],
+            [0, 1, 0]
+        ],
+        [
+            [0, 0, 0],
+            [1, 1, 1],
+            [0, 0, 1]
+        ],
+        [
+            [0, 1, 0],
+            [0, 1, 0],
+            [1, 1, 0]
+        ]
+    ];
+
+    for(let r = 0;r < J.length;r++){
+        for(let c = 0; c < J[0].length;c++){
+            //draw one square of the piece on canvas
+            //the 2 for loops draw the whole piece
+            for(let d = 0; d < J[0].length; d++){
+                document.write("this is J len",J.length);
+                document.write("this is J[0] len",J[0][0].length);
+
+                // document.write("this is J[r][c][d]",J[r][c][d]); 
+                
+            }
+        }
+    } 
+
+    </script>-->
+
     
 </body>
 </html>

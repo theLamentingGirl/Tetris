@@ -60,7 +60,11 @@ function getPoints(){
 
 }
 
+function animate(){
+    
+}
 function drop(){
+    
     let now = Date.now();
     let delta = now - dropStart;
     if(delta > dropTime){
@@ -90,9 +94,6 @@ function controlKeys(event){
     }
 }
 
-function reset(){
-
-}
 
 function play(){
 

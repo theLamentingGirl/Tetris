@@ -1,32 +1,69 @@
-
+//Board of tetris with board functionality and instances of Piece.
+//This resembles assembling/ setting up new pieces onto the board
 class Board {
-    ctx;
-    canvas;
 
-    constructor(){
-        //to see changs in console
-        this.board=this.createBoard();
-        //to keep a track of colors
-        this.colorBoard = Array.from({length:ROWS},() => Array(COLS).fill(VACANT["0"]));
-            
+    constructor(ctx,ctxNext){
+        this.ctx = ctx;
+        this.ctxNext = ctxNext;
+                    
         this.ctx.canvas.width = COLS * BLOCK_SIZE;
         this.ctx.canvas.height = ROWS * BLOCK_SIZE;
     
         //multiplies the board reference values - *BLOCK_SIZE
         this.ctx.scale(BLOCK_SIZE,BLOCK_SIZE);
+
+        //to see changs in console
+        this.board=this.createBoard();
+        //to keep a track of colors
+        this.colorBoard = Array.from({length:ROWS},() => Array(COLS).fill(VACANT["0"]));
+
+        this.nextPiece;
+    }
+
+    //square used to make the pieces and the empty board
+    drawSquare(x,y,color){
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x,y,1,1);//(xcoord,ycoord,sizex,sizey)
+    }
     
+
+    //setting up pieces on the board
+
+    setStartPos(){
         //initialising the piece position in the board
         this.x=3;
         this.y=-2;
 
     }
 
-    //square used to make the pieces
-    drawSquare(x,y,color){
-        this.ctx.fillStyle = color;
-        this.ctx.fillRect(x,y,1,1);//(xcoord,ycoord,sizex,sizey)
+    getNewPiece(){
+        let r = randomNum = Math.floor(Math.random() * PIECES.length)
+        this.nextPiece = new Piece(PIECES[r][0],PIECES[r][1],ctxNext)
+
+        this.nextPiece.uncreatePiece();
+        this.undrawPiece();
+        this.drawPiece();
+
     }
-    
+
+    drawPiece(){
+        for(let r = 0;r < this.activeShape.length;r++){
+            for(let c = 0; c < this.activeShape.length;c++){
+                this.board[this.x + c][this.y + r]=this.activeShape[r][c];
+
+                //draw one square of the piece on canvas
+                //the 2 for loops draw the whole piece
+                if( this.activeShape[r][c]){
+                    this.drawSquare(this.x + c, this.y + r, this.color);
+                }
+            }
+        }
+
+    }
+
+    undrawPiece(){
+
+    }
 
     //draws the white board
     createBoard(){
