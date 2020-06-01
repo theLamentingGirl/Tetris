@@ -1,5 +1,4 @@
 //Things to be fixed
-//1. removeRows 
 //2. use ctxNext & create a box to display the upcoming piece --> last if every other thing works
 
 // initialises a piece
@@ -30,7 +29,7 @@ class Board {
 
         this.init();
         this.drawBoard();
-        this.drawPiece();
+        //this.drawPiece();
     }
 
     init(){
@@ -65,6 +64,7 @@ class Board {
         for(let r = 0; r <ROWS; r++){
             for(let c = 0; c <COLS; c++){
                 this.drawSquare(c,r,this.board[r][c]);
+                
             }
         }
     }
@@ -90,6 +90,7 @@ class Board {
                         
                     this.drawSquare(this.x + c, this.y + r, this.piece.color);
                 // console.log(this.piece.activeShape[0].length);
+                
                 }
                 
             }
@@ -168,6 +169,7 @@ class Board {
             this.setStartPos();
 
         }
+        //console.log(this.y,this.checkCollision(0,1,this.piece.activeShape));
         return true;
         
     }
@@ -218,15 +220,18 @@ class Board {
                 
 
                 //lock the game
-                this.board[this.x + c][this.y + r] = this.piece.color;
+                this.board[this.y + r][this.x + c] = this.piece.color;
                 
                 
             }
         }
 
         this.removeRows();
-        this.drawPiece();
-        // this.drawBoard();
+        //this.drawPiece();
+        this.drawBoard();
+        console.log(this.board)
+        //console.log(this.y);
+
     }
 
     
@@ -241,8 +246,8 @@ class Board {
                 } //??
 
                 //coordinates of piece after movement
-                let newX = this.x + c + x;
-                let newY = this.y + r + y;
+                var newX = this.x + c + x;
+                var newY = this.y + r + y;
                 
                 //conditions for collision
                 //wall boundaries 
@@ -254,12 +259,14 @@ class Board {
                     continue;
                 }
                 //if there is a piece there already
-                if(this.board[newX][newY] !== VACANT["0"]){
+                if(this.board[newY][newX] !== VACANT["0"]){
                     return true;
                 }
 
             }
         }
+        console.log(this.x,this.y, newX, newY);
+        //console.log(ROWS,COLS);
         return false;
 
     }

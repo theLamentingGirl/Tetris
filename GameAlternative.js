@@ -1,5 +1,4 @@
 // Things to be fixed:
-//1. pieces get locked midway of the board. board config problem/ lock func problem
 //2. animate not working to make the piece move automatically
 //3. score and level not updated probably due to rows not removed
 
@@ -78,10 +77,10 @@ function animate(){
         requestAnimationFrame(animate);
     }
 
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    // ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
 
-    newBoard.drawBoard();
-    newBoard.drawPiece();
+    // newBoard.drawBoard();
+    // newBoard.drawPiece();
 
     //requstAnimationId = requestAnimationFrame(animate);
     
