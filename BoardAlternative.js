@@ -1,6 +1,6 @@
 //Things to be fixed
 //2. use ctxNext & create a box to display the upcoming piece --> last if every other thing works
-
+//3. write hardDrop piece fn
 // initialises a piece
 class Piece {
     constructor(shape,color,ctx){
@@ -27,8 +27,12 @@ class Board {
         //multiplies the board reference values - *BLOCK_SIZE
         this.ctx.scale(BLOCK_SIZE,BLOCK_SIZE);
 
+        this.gameOver = false;
+        
         this.init();
         this.drawBoard();
+
+        this.removedRows = 0;
         //this.drawPiece();
     }
 
@@ -56,7 +60,7 @@ class Board {
     //draws the empty board
     emptyBoard(){
         let board = Array.from({length:ROWS},() => Array(COLS).fill(VACANT["0"]));
-        console.log(board)
+        //console.log(board)
         return board;
     }
 
@@ -64,7 +68,8 @@ class Board {
         for(let r = 0; r <ROWS; r++){
             for(let c = 0; c <COLS; c++){
                 this.drawSquare(c,r,this.board[r][c]);
-                
+                //document.getElementById("score") = this.removedRows;
+                console.log("this is removedrows:",this.removedRows);
             }
         }
     }
@@ -150,16 +155,19 @@ class Board {
             this.y++;
             this.drawPiece();
         }else{
+
+            if(this.y <= -2){
+                this.gameOver = true;
+                return false
+            } 
+
             this.lockPiece();
             //this.removeRows();
 
-            if(this.y <= -2){
-                //game over
-                return false
-            }
+            
 
             //generate the next piece after setting the old one to current piece
-            // this.piece = this.getNewPiece;
+            // thi s.piece = this.getNewPiece;
             // this.piece.ctx = this.ctx;
             // this.setStartPos();
             // this.getNewPiece();
@@ -172,6 +180,10 @@ class Board {
         //console.log(this.y,this.checkCollision(0,1,this.piece.activeShape));
         return true;
         
+    }
+
+    hardDropPiece(){
+
     }
 
     //rotate piece
@@ -226,7 +238,8 @@ class Board {
             }
         }
 
-        this.removeRows();
+        this.removedRows += this.removeRows();
+        
         //this.drawPiece();
         this.drawBoard();
         console.log(this.board)
@@ -265,7 +278,7 @@ class Board {
 
             }
         }
-        console.log(this.x,this.y, newX, newY);
+        //console.log(this.x,this.y, newX, newY);
         //console.log(ROWS,COLS);
         return false;
 
@@ -273,6 +286,7 @@ class Board {
 
     //remove full rows
     removeRows(){
+        //this.removedRows;
         let lines = 0;
         let prevColor;
         for(let r = 0; r < ROWS; r++){

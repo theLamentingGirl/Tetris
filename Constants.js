@@ -176,4 +176,6 @@ const PIECES = [
 //prevents accessing/changing the values inside PIECES
 Object.freeze(PIECES)
 
+const LEVEL = [1,2,3,4,5,6,7,8,9];
+Object.freeze(LEVEL);
 //--------------------------------------------------

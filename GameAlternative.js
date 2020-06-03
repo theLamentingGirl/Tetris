@@ -1,5 +1,4 @@
 // Things to be fixed:
-//2. animate not working to make the piece move automatically
 //3. score and level not updated probably due to rows not removed
 
 const canvas = document.getElementById("board");
@@ -7,89 +6,153 @@ const ctx = canvas.getContext("2d");
 const canvasNext = document.getElementById("next")
 const ctxNext = canvasNext.getContext("2d")
 
-let dropStart;
-let dropTime;
-
-
 document.addEventListener("keydown",controlKeys);
-
-// ctx.canvas.width = COLS * BLOCK_SIZE;
-// ctx.canvas.height = ROWS * BLOCK_SIZE;
-// ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 let newBoard = new Board(ctx,ctxNext);
 
-scoreElement = document.getElementById("score");
-levelElement = document.getElementById("level");
+const scoreElement = document.getElementById("score");
+const levelElement = document.getElementById("level");
+
+//document.getElementById("score") = 10;
+//scoreElement.innerHTML = newBoard.removedRows;
 let requstAnimationId;
 
 //Necessary functions-----------------------------------------------------
-function gameOver(){
-    if(newBoard.movePieceDown()=== false){
-        cancelAnimationFrame(requstAnimationId);
-    }
-}
 
+
+//console.log("this is rows:",rows);
+let level = 0;
+let score = 0;
+let prevScore;
+let scoreAdded;
+let dropTime;
+
+//bug - points and level gets added everytime you press down arrow
+//after odd num of rows are are cleared eg - after 1st row clears every press adds a num
+
+//rewrite getPoints
 function getPoints(){
-    let level = 0;
-    let score = 0;
-    let rows = newBoard.removeRows();//gives num of lines removed
-    let dropTime = 100;
+    let rows = newBoard.removedRows;
+    console.log("rows:",rows,"score:",score)
+    
+    //let rows = newBoard.removeRows();//gives num of lines removed
+    ms = 1000
+
 
     if(rows > 0){
-        let prevScore = score;
+        prevScore = score;
         score = level + rows;
-        var scoreAdded = score - prevScore;
+        //scoreAdded = score - prevScore;
+        console.log("level",level,"score:",score)//,"prevScore:",prevScore);
     }
 
-    while(gameOver() === false){
-        if(scoreAdded === 1){
-            level++;
+    //if(newBoard.gameOver === false){
+    if(score == 2){
+        level++;
 
-            if(dropTime > 100){
-                dropTime -= scoreAdded;
-            }
-        }
-
+        //if(dropTime > 1000){
+        //dropTime -= scoreAdded;
+        //}
     }
+
+    //}
 
     scoreElement.innerHTML = score;
     levelElement.innerHTML = level;
 
 }
 
+// let score = 0;
+// let i = 0;
+// function getPoints(){
+//     while(i>=0 && i<10){
+//         let lines = newBoard.removedRows;
+//         console.log("lines:",lines,"level[i]:",LEVEL[i]);
+//         if(score == LEVEL[i]){
+            
+//             score = LEVEL[i+1] + lines;
+//             i++;
+//         }else{
+//             score = LEVEL[i] + lines;
+//         }
+//         scoreElement.innerHTML = score;
+//         levelElement.innerHTML = LEVEL[i];
+//     }
+
+// }
+
+let now;
+let start = Date.now();
+// let score = 0;
+// let i = 0;
+
+// function animate(){
+//     console.log("this is animate")
+//     if(i>=0 && i<10){
+//             let lines = newBoard.removedRows;
+//             console.log("lines:",lines,"level[i]:",LEVEL[i]);
+
+//             if(( now - start) > 1000){
+//                 newBoard.movePieceDown();
+
+//                 start = Date.now();
+//                 console.log("this is the auto move down")
+//             }
+
+//             if(newBoard.gameOver == false){
+//                 now = Date.now();
+//                 let lines = newBoard.removedRows;
+//                 if(score == LEVEL[i]){
+                    
+//                     score = LEVEL[i+1] + lines;
+//                     requstAnimationId = requestAnimationFrame(animate);
+
+//                     scoreElement.innerHTML = score;
+//                     levelElement.innerHTML = LEVEL[i];
+//                     i++;
+//                 }else{
+//                     score = LEVEL[i] + lines;
+//                     requstAnimationId = requestAnimationFrame(animate);
+//                     scoreElement.innerHTML = score;
+//                     levelElement.innerHTML = LEVEL[i];
+//                 }
+                
+//             }else{
+//                 alert("Game Over");
+//             }
+//         }
+// }
+
+
 function animate(){
-    //date.now returns time elapsed in ms since jan 1,1970.
-    dropStart = Date.now() ;
-    let now = Date.now();
-    let delta = now - dropStart;
-    if(delta > 1000){
-        newBoard.movePieceDown();
-        dropStart = Date.now();
-
-        // if(!newBoard.movePieceDown){
-        //     gameOver();
-        // }
-        //can include hard drop if necessary
-    }
-
-    if(!gameOver){
-        requestAnimationFrame(animate);
-    }
-
-    // ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-
-    // newBoard.drawBoard();
-    // newBoard.drawPiece();
-
-    //requstAnimationId = requestAnimationFrame(animate);
     
-}
+
+    if(( now - start) > 1000){
+        newBoard.movePieceDown();
+        getPoints();
+        start = Date.now();
+        //console.log("this is the auto move down")
+    }
+
+    if(newBoard.gameOver == false){
+        now = Date.now();    
+        
+        requstAnimationId = requestAnimationFrame(animate);
+        //console.log("this is the loop conditional")
+    }else{
+        alert("gameOver");
+    }
+
+    
+    //console.log("start:",start,"now:",now);
+    //console.log("this is the difference",start - now);
+    
+ }
 
 function controlKeys(event){
     if(event.keyCode == 37){
         newBoard.movePieceLeft();
-        console.log("left key pressed");
+        // console.log("left key pressed");
         dropStart = Date.now();
     }else if(event.keyCode == 38){
         newBoard.rotatePiece();
@@ -99,9 +162,10 @@ function controlKeys(event){
         dropStart = Date.now();
     }else if(event.keyCode == 40){
         newBoard.movePieceDown();
+        // getPoints();
     }else if(event.keyCode ==13){
         console.log("enter pressed")
-        //play();
+        play();
     }
 }
 
@@ -117,7 +181,10 @@ function play(){
 
     //start new animation
     animate();
-    getPoints();
+    
+}
+
+function pause(){
 
 }
 
