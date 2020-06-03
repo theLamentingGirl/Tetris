@@ -1,6 +1,5 @@
 //Things to be fixed
-//2. use ctxNext & create a box to display the upcoming piece --> last if every other thing works
-//3. write hardDrop piece fn
+// all fixed
 // initialises a piece
 class Piece {
     constructor(shape,color,ctx){
@@ -23,9 +22,13 @@ class Board {
                     
         this.ctx.canvas.width = COLS * BLOCK_SIZE;
         this.ctx.canvas.height = ROWS * BLOCK_SIZE;
+
+        this.ctxNext.canvas.width = 4 * BLOCK_SIZE;
+        this.ctxNext.canvas.height = 4 * BLOCK_SIZE;
     
         //multiplies the board reference values - *BLOCK_SIZE
-        this.ctx.scale(BLOCK_SIZE,BLOCK_SIZE);
+        this.ctx.scale(BLOCK_SIZE,BLOCK_SIZE)
+        this.ctxNext.scale(BLOCK_SIZE,BLOCK_SIZE);
 
         this.gameOver = false;
         
@@ -44,17 +47,88 @@ class Board {
         let r = Math.floor(Math.random() * PIECES.length)
         //this.piece = new Piece(PIECES[r][0],PIECES[r][1],ctx)
         // this.nextPiece;
-        this.piece = this.getNewPiece();
+        // this.piece = this.getNewPiece();
+        this.nextPiece = this.getNewPiece();
+        console.log("nextPiece:")
+        this.piece = this.nextPiece;
 
         this.setStartPos();
     }
 
+    //methods necessary for next piece preview
+
+    drawPreviewSquare(x,y,color){
+        this.ctxNext.fillStyle = color;
+        this.ctxNext.fillRect(x,y,1,1)
+    }
+
+    drawPreviewBoard(){
+        for(let r = 0; r < 4;r++){
+            for(let c = 0;c < 4; c++){
+                this.drawPreviewSquare(c,r,VACANT[0])
+            }
+        }
+    }
+
+    drawPreviewPiece(){
+
+        for(let r = 0;r < this.nextPiece.activeShape.length;r++){
+            for(let c = 0; c < this.nextPiece.activeShape.length;c++){
+                //draw one square of the piece on canvas
+                //the 2 for loops draw the whole piece
+                if( this.nextPiece.activeShape[r][c] === 1){
+                        
+                    this.drawPreviewSquare(c, r, this.nextPiece.color);
+                // console.log(this.piece.activeShape[0].length);
+                
+                }
+                
+            }
+        }
+
+    }
+
+    undrawPreviewPiece(){
+        for(let r = 0;r < this.nextPiece.activeShape.length;r++){
+            for(let c = 0; c < this.nextPiece.activeShape.length;c++){
+                //draw one square of the piece on canvas
+                //the 2 for loops draw the whole piece
+                if( this.nextPiece.activeShape[r][c] === 1){
+                        
+                    this.drawPreviewSquare(c, r, "white");
+                // console.log(this.piece.activeShape[0].length);
+                
+                }
+                
+            }
+        }
+
+    }
+    //----------------------------------------------------------------
+    // gets new piece for this.nextPiece
+    getNewPiece(){
+        if(this.nextPiece){
+            this.undrawPreviewPiece();
+        }
+
+        let r = Math.floor(Math.random() * PIECES.length)
+        this.nextPiece = new Piece(PIECES[r][0],PIECES[r][1],ctxNext)
+
+        this.drawPreviewPiece();
+
+        return this.nextPiece;
+
+    }
+    
+    //-----------------------------------------------------------------
     //This acts as the primary UI contruction tool
     //square used to make the pieces and the empty board
     drawSquare(x,y,color){
         this.ctx.fillStyle = color;
         this.ctx.fillRect(x,y,1,1);//(xcoord,ycoord,sizex,sizey)
     }
+
+    
     
     //creating the board 
     //draws the empty board
@@ -72,17 +146,6 @@ class Board {
                 console.log("this is removedrows:",this.removedRows);
             }
         }
-    }
-
-    // draws the piece on the drawn board
-    getNewPiece(){
-        let r = Math.floor(Math.random() * PIECES.length)
-        this.nextPiece = new Piece(PIECES[r][0],PIECES[r][1],ctxNext)
-
-        // this.undrawPiece();
-        // this.drawPiece();
-        return this.nextPiece;
-
     }
 
     drawPiece(){
@@ -127,7 +190,7 @@ class Board {
         this.y=-2;
 
     }
-
+    //---------------------------------------------------------------------
     //movePieces on board = functionality of pieces
 
     movePieceLeft(){
@@ -174,7 +237,8 @@ class Board {
             // this.getNewPiece();
 
             // this.drawBoard();
-            this.piece = this.getNewPiece();
+            this.piece = this.nextPiece;
+            this.nextPiece = this.getNewPiece();            
             this.setStartPos();
 
         }
