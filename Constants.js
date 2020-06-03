@@ -176,6 +176,17 @@ const PIECES = [
 //prevents accessing/changing the values inside PIECES
 Object.freeze(PIECES)
 
-const LEVEL = [1,2,3,4,5,6,7,8,9];
-Object.freeze(LEVEL);
+const SCORES = {0: 5,1: 10,2:15,3:20,4:25,5:30,6:35,7:40,8:45,9:50}
+Object.freeze(SCORES);
+
+const KEY = {
+	ESC:27,
+	SPACE : 32,
+	ENTER : 13,
+	LEFT : 37,
+	UP : 38,
+	RIGHT : 39,
+	DOWN : 40,
+	P :80
+}
 //--------------------------------------------------

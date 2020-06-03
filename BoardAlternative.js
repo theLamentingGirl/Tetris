@@ -155,8 +155,9 @@ class Board {
             this.y++;
             this.drawPiece();
         }else{
+            console.log("y:",this.y)
 
-            if(this.y <= -2){
+            if(this.y < 0){
                 this.gameOver = true;
                 return false
             } 
@@ -183,6 +184,16 @@ class Board {
     }
 
     hardDropPiece(){
+
+        //until no collision keep moving the piece down
+        while(!this.checkCollision(0,1,this.piece.activeShape)){
+            this.movePieceDown();
+        }
+
+        
+        // lock the piece when it collides with the exisiting piece or bottom wall
+        //implements the else cond of movePieceDown which locks the piece
+        this.movePieceDown();
 
     }
 
@@ -242,7 +253,7 @@ class Board {
         
         //this.drawPiece();
         this.drawBoard();
-        console.log(this.board)
+        // console.log(this.board)
         //console.log(this.y);
 
     }
